@@ -1,0 +1,8 @@
+add_executable(reducev0 reduce_v0_baseline.cu)
+add_executable(reducev1 reduce_v1_no_divergence_branch.cu)
+add_executable(reducev2 reduce_v2_no_bank_conflict.cu)
+add_executable(reducev3 reduce_v3_add_during_load.cu)
+add_executable(reducev4 reduce_v4_unroll_last_warp.cu)
+add_executable(reducev5 reduce_v5_completely_unroll.cu)
+add_executable(reducev6 reduce_v6_multi_add.cu)
+add_executable(reducev7 reduce_v7_shuffle.cu)

@@ -4,7 +4,10 @@
 #include "device_launch_parameters.h"
 #include <time.h>
 #include <sys/time.h>
-
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
 #define THREAD_PER_BLOCK 256
 
 // bank conflict
@@ -66,8 +69,24 @@ int main(){
 
     dim3 Grid( N/THREAD_PER_BLOCK,1);
     dim3 Block( THREAD_PER_BLOCK,1);
-
-    reduce1<<<Grid,Block>>>(d_a,d_out);
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    vector<double> timevec;
+    for(int i=0; i<10; i++) {
+        cudaDeviceSynchronize();
+        cudaEventRecord(start);
+        reduce1<<<Grid,Block>>>(d_a,d_out);
+        cudaDeviceSynchronize();
+        cudaEventRecord(stop);
+        float milliseconds = 0;
+        cudaEventSynchronize(stop);
+        cudaEventElapsedTime(&milliseconds, start, stop);
+        timevec.push_back(milliseconds);
+    }
+    sort(timevec.begin(), timevec.end());
+    int mid = timevec.size() / 2;
+    cout << " Middle time is " << timevec[mid] << endl;
 
     cudaMemcpy(out,d_out,block_num*sizeof(float),cudaMemcpyDeviceToHost);
 
