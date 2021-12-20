@@ -1,1 +1,2 @@
-add_executable(sgemm sgemm.cu)
+WrapCUDABinary(sgemm)
+WrapCUDABinary(sgemm01)
